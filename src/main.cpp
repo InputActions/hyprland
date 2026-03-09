@@ -22,7 +22,10 @@ APICALL EXPORT PLUGIN_DESCRIPTION_INFO PLUGIN_INIT(void *handle)
     }
 
     plugin = std::make_unique<InputActions::Plugin>(handle);
-    return {"InputActions", "Custom mouse and touchpad gestures for Hyprland", "taj_ny", PROJECT_VERSION};
+    return {"InputActions",
+            "Linux utility for binding keyboard. mouse, touchpad and touchscreen actions to system actions (Hyprland compositor plugin implementation)",
+            "taj_ny",
+            PROJECT_VERSION};
 }
 
 APICALL EXPORT void PLUGIN_EXIT()

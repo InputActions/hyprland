@@ -23,8 +23,8 @@
 #include "HyprlandVirtualMouse.h"
 #include "utils/HyprlandFunctionHook.h"
 #include <hyprland/src/SharedDefs.hpp>
-#include <hyprland/src/event/EventBus.hpp>
 #include <hyprland/src/devices/IPointer.hpp>
+#include <hyprland/src/event/EventBus.hpp>
 #include <hyprland/src/plugins/HookSystem.hpp>
 #undef HANDLE
 #include <libinputactions/input/backends/LibinputInputBackend.h>
