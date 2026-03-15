@@ -18,10 +18,8 @@
 
 #include "HyprlandVirtualKeyboard.h"
 #include <hyprland/src/Compositor.hpp>
-#include <hyprland/src/desktop/state/FocusState.hpp>
 #include <hyprland/src/managers/KeybindManager.hpp>
 #include <hyprland/src/managers/input/InputManager.hpp>
-#include <hyprland/src/protocols/core/Compositor.hpp>
 #undef HANDLE
 #include <libinputactions/input/backends/InputBackend.h>
 
@@ -32,11 +30,6 @@ HyprlandVirtualKeyboard::HyprlandVirtualKeyboard()
     : m_device(makeShared<Device>())
 {
     g_pInputManager->newKeyboard(m_device);
-
-    // FIXME: Text input list is private, inputs added before the plugin is loaded will not work
-    m_newTextInputV3Listener = PROTO::textInputV3->m_events.newTextInput.listen([this](const auto &textInput) {
-        onNewTextInputV3(textInput);
-    });
 }
 
 HyprlandVirtualKeyboard::~HyprlandVirtualKeyboard()
@@ -67,32 +60,6 @@ void HyprlandVirtualKeyboard::keyboardKey(KeyboardKey key, bool state)
     }
 
     g_inputBackend->setIgnoreEvents(false);
-}
-
-void HyprlandVirtualKeyboard::keyboardText(const QString &text)
-{
-    if (!Desktop::focusState()->window()) {
-        return;
-    }
-
-    const auto *client = Desktop::focusState()->surface()->client();
-    for (const auto &[v3, _] : m_v3TextInputs) {
-        if (v3->client() == client && v3->good()) {
-            v3->preeditString({}, 0, 0);
-            v3->commitString(text.toStdString());
-            v3->sendDone();
-            return;
-        }
-    }
-}
-
-void HyprlandVirtualKeyboard::onNewTextInputV3(const WP<CTextInputV3> &textInput)
-{
-    m_v3TextInputs.emplace_back(textInput, textInput->m_events.destroy.listen([this, textInput]() {
-        std::erase_if(m_v3TextInputs, [textInput](const auto &input) {
-            return input.first == textInput;
-        });
-    }));
 }
 
 const std::string &HyprlandVirtualKeyboard::Device::getName()

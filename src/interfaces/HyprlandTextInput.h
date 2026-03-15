@@ -18,34 +18,25 @@
 
 #pragma once
 
-#include <aquamarine/input/Input.hpp>
-#include <hyprland/src/helpers/memory/Memory.hpp>
+#include <hyprland/src/protocols/TextInputV3.hpp>
 #undef HANDLE
-#include <libinputactions/input/devices/VirtualKeyboard.h>
+#include <libinputactions/interfaces/TextInput.h>
 
 namespace InputActions
 {
 
-class HyprlandVirtualKeyboard : public VirtualKeyboard
+class HyprlandTextInput : public TextInput
 {
 public:
-    HyprlandVirtualKeyboard();
-    ~HyprlandVirtualKeyboard() override;
+    HyprlandTextInput();
 
-    Aquamarine::IKeyboard *hyprlandDevice() { return m_device.get(); }
-
-    void keyboardKey(KeyboardKey key, bool state) override;
+    void writeText(const QString &text) override;
 
 private:
-    class Device : public Aquamarine::IKeyboard
-    {
-    public:
-        Device() = default;
+    void onNewTextInputV3(const WP<CTextInputV3> &textInput);
 
-        const std::string &getName() override;
-    };
-    SP<Device> m_device;
-    uint32_t m_modifiers{};
+    std::vector<std::pair<WP<CTextInputV3>, CHyprSignalListener>> m_v3TextInputs;
+    CHyprSignalListener m_newTextInputV3Listener;
 };
 
 }
