@@ -34,21 +34,52 @@ HyprlandTextInput::HyprlandTextInput()
     });
 }
 
+void HyprlandTextInput::deleteSurroundingText(uint32_t beforeLength, uint32_t afterLength)
+{
+    if (auto *v3 = currentV3()) {
+        v3->deleteSurroundingText(beforeLength, afterLength);
+        v3->sendDone();
+    }
+}
+
+std::optional<QString> HyprlandTextInput::surroundingText()
+{
+    if (auto *v3 = currentV3()) {
+        return QString::fromStdString(v3->m_current.surrounding.text);
+    }
+    return {};
+}
+
+std::optional<uint32_t> HyprlandTextInput::surroundingTextCursorPosition()
+{
+    if (auto *v3 = currentV3()) {
+        return v3->m_current.surrounding.cursor;
+    }
+    return {};
+}
+
 void HyprlandTextInput::writeText(const QString &text)
 {
+    if (auto *v3 = currentV3()) {
+        v3->preeditString({}, 0, 0);
+        v3->commitString(text.toStdString());
+        v3->sendDone();
+    }
+}
+
+CTextInputV3 *HyprlandTextInput::currentV3() const
+{
     if (!Desktop::focusState()->window()) {
-        return;
+        return {};
     }
 
     const auto *client = Desktop::focusState()->surface()->client();
     for (const auto &[v3, _] : m_v3TextInputs) {
-        if (v3->client() == client && v3->good()) {
-            v3->preeditString({}, 0, 0);
-            v3->commitString(text.toStdString());
-            v3->sendDone();
-            return;
+        if (v3->client() == client && v3->good() && v3->m_current.enabled.value) {
+            return v3.get();
         }
     }
+    return {};
 }
 
 void HyprlandTextInput::onNewTextInputV3(const WP<CTextInputV3> &textInput)
