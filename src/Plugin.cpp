@@ -21,6 +21,7 @@
 #include "interfaces/HyprlandOnScreenMessageManager.h"
 #include "interfaces/HyprlandPointer.h"
 #include "interfaces/HyprlandSessionLock.h"
+#include "interfaces/HyprlandTextInput.h"
 #include "interfaces/HyprlandWindowProvider.h"
 #include <hyprland/src/Compositor.hpp>
 #include <hyprland/src/helpers/Monitor.hpp>
@@ -45,6 +46,7 @@ Plugin::Plugin(void *handle)
     g_onScreenMessageManager = std::make_shared<HyprlandOnScreenMessageManager>();
     g_pointerPositionGetter = pointer;
     g_pointerPositionSetter = pointer;
+    g_textInput = std::make_shared<HyprlandTextInput>();
     g_sessionLock = std::make_shared<HyprlandSessionLock>();
     g_windowProvider = std::make_shared<HyprlandWindowProvider>();
 
