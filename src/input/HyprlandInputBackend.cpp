@@ -163,7 +163,6 @@ void HyprlandInputBackend::touchDown(Event::SCallbackInfo &info, const ITouch::S
 
 void HyprlandInputBackend::keyboardKeyHook(void *thisPtr, const IKeyboard::SKeyEvent &event, SP<IKeyboard> sender)
 {
-    qWarning() << "key!!!";
     auto *self = dynamic_cast<HyprlandInputBackend *>(g_inputBackend.get());
     if (self->m_ignoreEvents || !self->m_blockHookCalls) {
         self->m_keyboardKeyHook(thisPtr, event, sender);
