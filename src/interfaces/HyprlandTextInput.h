@@ -30,9 +30,13 @@ class HyprlandTextInput : public TextInput
 public:
     HyprlandTextInput();
 
+    void deleteSurroundingText(uint32_t beforeLength, uint32_t afterLength) override;
+    std::optional<QString> surroundingText() override;
+    std::optional<uint32_t> surroundingTextCursorPosition() override;
     void writeText(const QString &text) override;
 
 private:
+    CTextInputV3 *currentV3() const;
     void onNewTextInputV3(const WP<CTextInputV3> &textInput);
 
     std::vector<std::pair<WP<CTextInputV3>, CHyprSignalListener>> m_v3TextInputs;
