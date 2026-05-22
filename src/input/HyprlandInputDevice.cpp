@@ -21,6 +21,7 @@
 #include <hyprland/src/config/ConfigManager.hpp>
 #include <hyprland/src/devices/IKeyboard.hpp>
 #include <hyprland/src/devices/IPointer.hpp>
+#include <hyprland/src/managers/KeybindManager.hpp>
 #undef HANDLE
 #include <libinput.h>
 #include <libinputactions/input/backends/InputBackend.h>
@@ -33,7 +34,14 @@ HyprlandInputDevice::HyprlandInputDevice(SP<IHID> device, InputDeviceType type, 
     , m_device(std::move(device))
     , m_backend(backend)
 {
-    if (g_pConfigManager->getDeviceString(name, "tap_button_map", "input:touchpad:tap_button_map") == "lmr") {
+    if (
+#ifdef HYPRLAND_0_55_OR_GREATER
+        Config::mgr()
+#else
+        g_pConfigManager
+#endif
+            ->getDeviceString(name, "tap_button_map", "input:touchpad:tap_button_map")
+        == "lmr") {
         properties().setTouchpadLmrTapButtonMap(true);
     }
 }
