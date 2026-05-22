@@ -1,6 +1,5 @@
 {
   cmake,
-  extra-cmake-modules,
   hyprlandPlugins,
   kdePackages,
   lib,
@@ -10,7 +9,7 @@
   ...
 }:
 
-hyprlandPlugins.mkHyprlandPlugin rec {
+hyprlandPlugins.mkHyprlandPlugin {
   pluginName = "inputactions_hyprland";
   version = "0.9.0.0";
 
@@ -19,7 +18,8 @@ hyprlandPlugins.mkHyprlandPlugin rec {
   dontWrapQtApps = true;
 
   nativeBuildInputs = [
-    extra-cmake-modules
+    cmake
+    kdePackages.extra-cmake-modules
   ];
 
   buildInputs = [
