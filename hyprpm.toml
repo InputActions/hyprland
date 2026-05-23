@@ -7,3 +7,9 @@ build = [
     "make -j$(nproc)",
     "make install"
 ]
+
+commit_pins = [
+    # Hyprland commit                            InputActions commit
+    ["521ece463c4a9d3d128670688a34756805a4328f", "a3e841de58b2f2d83422bdedacde403bb759447b"], # v0.54.3
+    ["af923e30d1d24f1f4a4f5cb8308065173c1d9539", "05d9ae3e7ed45ce812bdc3860adba293b8843e12"], # v0.55.0
+]
