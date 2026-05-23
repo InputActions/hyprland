@@ -37,9 +37,4 @@ target_link_libraries(inputactions_hyprland PRIVATE
     rt
     PkgConfig::deps
 )
-
-if(${hyprland_VERSION} VERSION_GREATER_EQUAL 0.55.0)
-    target_compile_definitions(inputactions_hyprland PRIVATE HYPRLAND_0_55_OR_GREATER)
-endif()
-
 install(TARGETS inputactions_hyprland)
