@@ -175,6 +175,19 @@ void HyprlandInputBackend::keyboardKeyHook(void *thisPtr, const IKeyboard::SKeyE
     }
 }
 
+void HyprlandInputBackend::pointerButtonHook(void *thisPtr, IPointer::SButtonEvent event, SP<IPointer> sender)
+{
+    auto *self = dynamic_cast<HyprlandInputBackend *>(g_inputBackend.get());
+    if (self->m_ignoreEvents || !self->m_blockHookCalls) {
+        self->m_pointerButtonHook(thisPtr, event, sender);
+        return;
+    }
+
+    if (!self->pointerButton(self->findInputActionsDevice(sender.get()), event.button, event.state == WL_POINTER_BUTTON_STATE_PRESSED)) {
+        self->m_pointerButtonHook(thisPtr, event, sender);
+    }
+}
+
 void HyprlandInputBackend::pointerAxisHook(void *thisPtr, IPointer::SAxisEvent event, SP<IPointer> sender)
 {
     auto *self = dynamic_cast<HyprlandInputBackend *>(g_inputBackend.get());
@@ -308,27 +321,6 @@ void HyprlandInputBackend::pinchEndHook(void *thisPtr, uint32_t timeMs, bool can
     auto *self = dynamic_cast<HyprlandInputBackend *>(g_inputBackend.get());
     if (self->m_ignoreEvents || !self->m_blockHookCalls) {
         self->m_pinchEndHook(thisPtr, timeMs, cancelled);
-    }
-}
-
-void HyprlandInputBackend::onPointerButtonSignal(InputDevice *sender, IPointer *hyprlandDevice, const IPointer::SButtonEvent &event)
-{
-    if (m_ignoreEvents) {
-        return;
-    }
-
-    if (!pointerButton(sender, event.button, event.state == WL_POINTER_BUTTON_STATE_PRESSED)) {
-        m_ignoreEvents = true;
-        hyprlandDevice->m_pointerEvents.button.emit(event);
-        m_ignoreEvents = false;
-    }
-}
-
-void HyprlandInputBackend::pointerButtonHook(void *thisPtr, IPointer::SButtonEvent event)
-{
-    auto *self = dynamic_cast<HyprlandInputBackend *>(g_inputBackend.get());
-    if (self->m_ignoreEvents || !self->m_blockHookCalls) {
-        self->m_pointerButtonHook(thisPtr, event);
     }
 }
 

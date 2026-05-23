@@ -36,9 +36,9 @@ class InputDevice;
 
 /**
  * Uses three different methods for getting events, because Hyprland does not always provide senders.
- *   1. Hyprland events (HyprlandAPI::registerCallbackDynamic) for keyboard key press and touch down events. The sender is provided in the event itself.
- *   2. Function hooks for pointer axis and pointer button events. The sender is provided as an argument alongside the event.
- *   3. Function hooks + signals for all other events. The sender is not provided at all. To get the device, the backend blocks the call by default, then,
+ *   1. Hyprland events (HyprlandAPI::registerCallbackDynamic), the sender is provided in the event itself.
+ *   2. Function hooks, the sender is provided as an argument alongside the event.
+ *   3. Function hooks + signals for all other events, the sender is not provided at all. To get the device, the backend blocks the call by default, then,
  *      once it gets the event and sender from the signal, it re-emits the signal.
  */
 class HyprlandInputBackend : public LibinputInputBackend
@@ -58,7 +58,6 @@ public:
     void onPinchBeginSignal(InputDevice *sender, IPointer *hyprlandDevice, const IPointer::SPinchBeginEvent &event);
     void onPinchUpdateSignal(InputDevice *sender, IPointer *hyprlandDevice, const IPointer::SPinchUpdateEvent &event);
     void onPinchEndSignal(InputDevice *sender, IPointer *hyprlandDevice, const IPointer::SPinchEndEvent &event);
-    void onPointerButtonSignal(InputDevice *sender, IPointer *hyprlandDevice, const IPointer::SButtonEvent &event);
     void onSwipeBeginSignal(InputDevice *sender, IPointer *hyprlandDevice, const IPointer::SSwipeBeginEvent &event);
     void onSwipeUpdateSignal(InputDevice *sender, IPointer *hyprlandDevice, const IPointer::SSwipeUpdateEvent &event);
     void onSwipeEndSignal(InputDevice *sender, IPointer *hyprlandDevice, const IPointer::SSwipeEndEvent &event);
@@ -81,6 +80,7 @@ private:
     // Method 2
     static void keyboardKeyHook(void *thisPtr, const IKeyboard::SKeyEvent &event, SP<IKeyboard> sender);
     static void pointerAxisHook(void *thisPtr, IPointer::SAxisEvent event, SP<IPointer> sender);
+    static void pointerButtonHook(void *thisPtr, IPointer::SButtonEvent event, SP<IPointer> sender);
     static void pointerMotionHook(void *thisPtr, IPointer::SMotionEvent event);
 
     // Method 3
@@ -89,7 +89,6 @@ private:
     static void pinchBeginHook(void *thisPtr, uint32_t timeMs, uint32_t fingers);
     static void pinchUpdateHook(void *thisPtr, uint32_t timeMs, const Vector2D &delta, double scale, double rotation);
     static void pinchEndHook(void *thisPtr, uint32_t timeMs, bool cancelled);
-    static void pointerButtonHook(void *thisPtr, IPointer::SButtonEvent event);
     static void swipeBeginHook(void *thisPtr, uint32_t timeMs, uint32_t fingers);
     static void swipeUpdateHook(void *thisPtr, uint32_t timeMs, const Vector2D &delta);
     static void swipeEndHook(void *thisPtr, uint32_t timeMs, bool cancelled);
