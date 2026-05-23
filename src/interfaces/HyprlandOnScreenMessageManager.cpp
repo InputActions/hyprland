@@ -17,40 +17,19 @@
 */
 
 #include "HyprlandOnScreenMessageManager.h"
-
-#ifdef HYPRLAND_0_55_OR_GREATER
 #include <hyprland/src/notification/NotificationOverlay.hpp>
-#else
-#include <hyprland/src/debug/HyprNotificationOverlay.hpp>
-#endif
 
 namespace InputActions
 {
 
 void HyprlandOnScreenMessageManager::showMessage(const QString &message)
 {
-    const auto color =
-#ifdef HYPRLAND_0_55_OR_GREATER
-        Notification::
-#endif
-            ICONS_COLORS[1];
-
-#ifdef HYPRLAND_0_55_OR_GREATER
-    Notification::overlay()
-#else
-    g_pHyprNotificationOverlay
-#endif
-        ->addNotification(QString("[InputActions] %1").arg(message).toStdString().c_str(), color, 5000);
+    Notification::overlay()->addNotification(QString("[InputActions] %1").arg(message).toStdString().c_str(), Notification::ICONS_COLORS[1], 5000);
 }
 
 void HyprlandOnScreenMessageManager::hideMessage()
 {
-#ifdef HYPRLAND_0_55_OR_GREATER
-    Notification::overlay()
-#else
-    g_pHyprNotificationOverlay
-#endif
-        ->dismissNotifications(1);
+    Notification::overlay()->dismissNotifications(1);
 }
 
 }

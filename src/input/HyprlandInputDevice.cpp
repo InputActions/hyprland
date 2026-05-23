@@ -34,14 +34,7 @@ HyprlandInputDevice::HyprlandInputDevice(SP<IHID> device, InputDeviceType type, 
     , m_device(std::move(device))
     , m_backend(backend)
 {
-    if (
-#ifdef HYPRLAND_0_55_OR_GREATER
-        Config::mgr()
-#else
-        g_pConfigManager
-#endif
-            ->getDeviceString(name, "tap_button_map", "input:touchpad:tap_button_map")
-        == "lmr") {
+    if (Config::mgr()->getDeviceString(name, "tap_button_map", "input:touchpad:tap_button_map") == "lmr") {
         properties().setTouchpadLmrTapButtonMap(true);
     }
 }
@@ -59,9 +52,6 @@ HyprlandInputDevice::HyprlandInputDevice(SP<IPointer> device, InputDeviceType ty
         }
     }
 
-    m_listeners.push_back(device->m_pointerEvents.button.listen([this, backend, device = device.get()](const IPointer::SButtonEvent &event) {
-        backend->onPointerButtonSignal(this, device, event);
-    }));
     m_listeners.push_back(device->m_pointerEvents.holdBegin.listen([this, backend, device = device.get()](const IPointer::SHoldBeginEvent &event) {
         backend->onHoldBeginSignal(this, device, event);
     }));
