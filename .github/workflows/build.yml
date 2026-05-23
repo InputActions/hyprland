@@ -36,30 +36,6 @@ jobs:
       - name: Build
         run: cmake --build "${GITHUB_WORKSPACE}/build" -j$(nproc)
 
-  build_hyprland_0_54:
-    name: Build (NixOS Hyprland 0.54)
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          persist-credentials: false
-          submodules: 'recursive'
-
-      - name: Install Nix
-        uses: cachix/install-nix-action@8aa03977d8d733052d78f4e008a241fd1dbf36b3 # v31.10.6
-        with:
-          nix_path: nixpkgs=channel:16aacb40e80d4a84d11a31a16c9093c8817159a2 # Hyprland 0.54.3
-
-      - name: Patch flake.nix
-        run: sed -i -e 's/nixos-unstable/16aacb40e80d4a84d11a31a16c9093c8817159a2/g' flake.nix
-
-      - name: Update flake.lock
-        run: nix flake update
-
-      - name: Build
-        run: nix build -L .?submodules=1#inputactions-hyprland
-
   build_nixos_unstable:
     name: Build (NixOS unstable)
     runs-on: ubuntu-latest
