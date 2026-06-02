@@ -30,7 +30,7 @@ public:
     Plugin(void *handle);
 
 protected:
-    void registerGlobalVariables(VariableManager *variableManager, std::shared_ptr<PointerPositionGetter> pointerPositionGetter,
+    void registerGlobalVariables(VariableRegistry *variableRegistry, std::shared_ptr<PointerPositionGetter> pointerPositionGetter,
                                  std::shared_ptr<WindowProvider> windowProvider) override;
 
 private:
