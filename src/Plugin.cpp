@@ -27,7 +27,7 @@
 #include <hyprland/src/helpers/Monitor.hpp>
 #include <hyprland/src/managers/eventLoop/EventLoopManager.hpp>
 #include <libinputactions/config/ConfigLoader.h>
-#include <libinputactions/variables/VariableManager.h>
+#include <libinputactions/variables/VariableRegistry.h>
 #undef HANDLE
 
 #include <QCoreApplication>
@@ -63,13 +63,13 @@ Plugin::Plugin(void *handle)
     g_configLoader->load();
 }
 
-void Plugin::registerGlobalVariables(VariableManager *variableManager, std::shared_ptr<PointerPositionGetter> pointerPositionGetter,
+void Plugin::registerGlobalVariables(VariableRegistry *variableRegistry, std::shared_ptr<PointerPositionGetter> pointerPositionGetter,
                                      std::shared_ptr<WindowProvider> windowProvider)
 {
-    InputActionsMain::registerGlobalVariables(variableManager, pointerPositionGetter, windowProvider);
+    InputActionsMain::registerGlobalVariables(variableRegistry, pointerPositionGetter, windowProvider);
 
     // This should be moved to libinputactions eventually
-    variableManager->registerRemoteVariable<QString>("screen_name", [](auto &value) {
+    variableRegistry->registerComputed<QString>("screen_name", [](auto &value) {
         if (const auto monitor = g_pCompositor->getMonitorFromCursor()) {
             value = QString::fromStdString(monitor->m_name);
         }
