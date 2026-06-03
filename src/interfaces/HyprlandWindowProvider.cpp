@@ -52,7 +52,7 @@ std::shared_ptr<Window> HyprlandWindowProvider::windowUnderFingers()
         return {};
     }
 
-    QPointF center;
+    PointF center;
     for (const auto &touchPoint : validTouchPoints) {
         center += touchPoint->rawPosition;
     }

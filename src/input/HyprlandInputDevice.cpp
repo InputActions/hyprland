@@ -219,7 +219,7 @@ void HyprlandInputDevice::restoreVirtualDeviceState()
     m_backend->setIgnoreEvents(false);
 }
 
-void HyprlandInputDevice::touchscreenTapDown(const std::vector<QPointF> &points)
+void HyprlandInputDevice::touchscreenTapDown(const std::vector<PointF> &points)
 {
     auto touchscreen = dynamicPointerCast<ITouch>(m_device);
 
@@ -238,7 +238,7 @@ void HyprlandInputDevice::touchscreenTapDown(const std::vector<QPointF> &points)
     m_backend->setIgnoreEvents(false);
 }
 
-void HyprlandInputDevice::touchscreenTapUp(const std::vector<QPointF> &points)
+void HyprlandInputDevice::touchscreenTapUp(const std::vector<PointF> &points)
 {
     auto *touchscreen = dynamic_cast<ITouch *>(m_device.get());
 
