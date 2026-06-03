@@ -24,6 +24,7 @@ hyprlandPlugins.mkHyprlandPlugin {
 
   buildInputs = [
     kdePackages.qtbase
+    kdePackages.qtdeclarative
     libevdev
     pkg-config
     yaml-cpp

@@ -49,7 +49,7 @@ void HyprlandVirtualMouse::mouseButton(MouseButton button, bool state)
     g_inputBackend->setIgnoreEvents(false);
 }
 
-void HyprlandVirtualMouse::mouseMotion(const QPointF &pos)
+void HyprlandVirtualMouse::mouseMotion(const PointF &pos)
 {
     const Vector2D delta(pos.x(), pos.y());
     g_inputBackend->setIgnoreEvents(true);
@@ -62,7 +62,7 @@ void HyprlandVirtualMouse::mouseMotion(const QPointF &pos)
     g_inputBackend->setIgnoreEvents(false);
 }
 
-void HyprlandVirtualMouse::mouseWheel(const QPointF &delta)
+void HyprlandVirtualMouse::mouseWheel(const PointF &delta)
 {
     g_inputBackend->setIgnoreEvents(true);
     if (const auto x = delta.x()) {

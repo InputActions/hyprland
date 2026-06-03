@@ -157,7 +157,7 @@ void HyprlandInputBackend::touchDown(Event::SCallbackInfo &info, const ITouch::S
         return;
     }
 
-    const QPointF position(event.pos.x * device->properties().size().width(), event.pos.y * device->properties().size().height());
+    const PointF position(event.pos.x * device->properties().size().width(), event.pos.y * device->properties().size().height());
     info.cancelled = touchscreenTouchDown(device, event.touchID, position, {event.pos.x, event.pos.y});
 }
 
@@ -195,7 +195,7 @@ void HyprlandInputBackend::pointerAxisHook(void *thisPtr, IPointer::SAxisEvent e
         return;
     }
 
-    auto delta = event.axis == WL_POINTER_AXIS_HORIZONTAL_SCROLL ? QPointF(event.delta, 0) : QPointF(0, event.delta);
+    auto delta = event.axis == WL_POINTER_AXIS_HORIZONTAL_SCROLL ? PointF(event.delta, 0) : PointF(0, event.delta);
     if (event.relativeDirection == WL_POINTER_AXIS_RELATIVE_DIRECTION_INVERTED) {
         delta *= -1;
     }
@@ -418,7 +418,7 @@ void HyprlandInputBackend::onTouchMotionSignal(InputDevice *sender, ITouch *hypr
         return;
     }
 
-    const QPointF position(event.pos.x * sender->properties().size().width(), event.pos.y * sender->properties().size().height());
+    const PointF position(event.pos.x * sender->properties().size().width(), event.pos.y * sender->properties().size().height());
     if (!touchscreenTouchMotion(sender, event.touchID, position, {event.pos.x, event.pos.y})) {
         m_ignoreEvents = true;
         hyprlandDevice->m_touchEvents.motion.emit(event);

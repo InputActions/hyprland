@@ -41,21 +41,21 @@ std::optional<CursorShape> HyprlandPointer::cursorShape()
     return {};
 }
 
-std::optional<QPointF> HyprlandPointer::globalPointerPosition()
+std::optional<PointF> HyprlandPointer::globalPointerPosition()
 {
     const auto position = g_pPointerManager->position();
-    return QPointF(position.x, position.y);
+    return PointF(position.x, position.y);
 }
 
-std::optional<QPointF> HyprlandPointer::screenPointerPosition()
+std::optional<PointF> HyprlandPointer::screenPointerPosition()
 {
     const auto monitor = g_pCompositor->getMonitorFromCursor();
     const QRectF geometry(monitor->m_position.x, monitor->m_position.y, monitor->m_size.x, monitor->m_size.y);
-    const auto translatedPosition = globalPointerPosition().value() - geometry.topLeft();
-    return QPointF(translatedPosition.x() / geometry.width(), translatedPosition.y() / geometry.height());
+    const auto translatedPosition = globalPointerPosition().value() - static_cast<PointF>(geometry.topLeft());
+    return PointF(translatedPosition.x() / geometry.width(), translatedPosition.y() / geometry.height());
 }
 
-void HyprlandPointer::setGlobalPointerPosition(const QPointF &value)
+void HyprlandPointer::setGlobalPointerPosition(const PointF &value)
 {
     g_inputBackend->setIgnoreEvents(true);
     g_pPointerManager->warpTo({value.x(), value.y()});
