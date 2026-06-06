@@ -59,9 +59,9 @@ HyprlandInputBackend::~HyprlandInputBackend()
     reset();
 }
 
-void HyprlandInputBackend::initialize()
+void HyprlandInputBackend::doInitialize()
 {
-    LibinputInputBackend::initialize();
+    LibinputInputBackend::doInitialize();
 
     m_virtualKeyboard.emplace();
     m_virtualMouse.emplace();
