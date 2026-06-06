@@ -50,7 +50,6 @@ public:
     VirtualKeyboard *virtualKeyboard() override;
     VirtualMouse *virtualMouse() override;
 
-    void initialize() override;
     void reset() override;
 
     void onHoldBeginSignal(InputDevice *sender, IPointer *hyprlandDevice, const IPointer::SHoldBeginEvent &event);
@@ -67,6 +66,8 @@ public:
     void onTouchUpSignal(InputDevice *sender, ITouch *hyprlandDevice, const ITouch::SUpEvent &event);
 
 protected:
+    void doInitialize() override;
+
     void touchpadPinchBlockingStopped(uint32_t fingers) override;
     void touchpadSwipeBlockingStopped(uint32_t fingers) override;
 
