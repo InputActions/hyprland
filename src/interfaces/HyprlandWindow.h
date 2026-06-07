@@ -40,6 +40,10 @@ public:
     std::optional<QString> resourceClass() override;
     std::optional<bool> fullscreen() override;
 
+    void activate() override;
+
+    static QString idToString(const Desktop::View::CWindow *window);
+
 private:
     Desktop::View::CWindow *m_window;
 };

@@ -27,9 +27,14 @@ HyprlandWindow::HyprlandWindow(Desktop::View::CWindow *window)
 {
 }
 
+void HyprlandWindow::activate()
+{
+    m_window->activate(true);
+}
+
 std::optional<QString> HyprlandWindow::id()
 {
-    return QString::number((uintptr_t)m_window, 16);
+    return idToString(m_window);
 }
 
 std::optional<pid_t> HyprlandWindow::pid()
@@ -55,6 +60,11 @@ std::optional<QString> HyprlandWindow::resourceClass()
 std::optional<bool> HyprlandWindow::fullscreen()
 {
     return m_window->isFullscreen();
+}
+
+QString HyprlandWindow::idToString(const Desktop::View::CWindow *window)
+{
+    return QString::number((uintptr_t)window, 16);
 }
 
 }
