@@ -78,4 +78,14 @@ std::shared_ptr<Window> HyprlandWindowProvider::windowUnderPointer()
     return {};
 }
 
+std::shared_ptr<Window> HyprlandWindowProvider::findWindowById(const QString &id)
+{
+    for (const auto &window : g_pCompositor->m_windows) {
+        if (HyprlandWindow::idToString(window.get()) == id) {
+            return std::make_shared<HyprlandWindow>(window.get());
+        }
+    }
+    return {};
+}
+
 }
