@@ -24,8 +24,9 @@
 #include "interfaces/HyprlandTextInput.h"
 #include "interfaces/HyprlandWindowProvider.h"
 #include <hyprland/src/Compositor.hpp>
-#include <hyprland/src/helpers/Monitor.hpp>
+#include <hyprland/src/desktop/state/FocusState.hpp>
 #include <hyprland/src/managers/eventLoop/EventLoopManager.hpp>
+#include <hyprland/src/output/Monitor.hpp>
 #include <libinputactions/config/ConfigLoader.h>
 #include <libinputactions/variables/VariableRegistry.h>
 #undef HANDLE
@@ -70,7 +71,7 @@ void Plugin::registerGlobalVariables(VariableRegistry *variableRegistry, std::sh
 
     // This should be moved to libinputactions eventually
     variableRegistry->registerComputed<QString>("screen_name", [](auto &value) {
-        if (const auto monitor = g_pCompositor->getMonitorFromCursor()) {
+        if (const auto monitor = Desktop::focusState()->monitor()) {
             value = QString::fromStdString(monitor->m_name);
         }
     });
