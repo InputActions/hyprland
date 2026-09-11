@@ -11,7 +11,7 @@
 
 hyprlandPlugins.mkHyprlandPlugin {
   pluginName = "inputactions_hyprland";
-  version = "0.9.2.0";
+  version = "0.9.2.1";
 
   src = ./..;
 
