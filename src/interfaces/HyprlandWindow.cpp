@@ -18,18 +18,19 @@
 
 #include "HyprlandWindow.h"
 #include <hyprland/src/desktop/view/Window.hpp>
+#include <hyprland/src/managers/fullscreen/FullscreenController.hpp>
 
 namespace InputActions
 {
 
-HyprlandWindow::HyprlandWindow(Desktop::View::CWindow *window)
-    : m_window(window)
+HyprlandWindow::HyprlandWindow(PHLWINDOW window)
+    : m_window(std::move(window))
 {
 }
 
 std::optional<QString> HyprlandWindow::id()
 {
-    return QString::number((uintptr_t)m_window, 16);
+    return QString::number((uintptr_t)m_window.get(), 16);
 }
 
 std::optional<pid_t> HyprlandWindow::pid()
@@ -39,7 +40,9 @@ std::optional<pid_t> HyprlandWindow::pid()
 
 std::optional<QRectF> HyprlandWindow::geometry()
 {
-    return QRectF(m_window->m_position.x, m_window->m_position.y, m_window->m_size.x, m_window->m_size.y);
+    const auto position = m_window->position(Desktop::View::IGeometric::GEOMETRIC_GOAL);
+    const auto size = m_window->size(Desktop::View::IGeometric::GEOMETRIC_GOAL);
+    return QRectF(position.x, position.y, size.x, size.y);
 }
 
 std::optional<QString> HyprlandWindow::title()
@@ -54,7 +57,7 @@ std::optional<QString> HyprlandWindow::resourceClass()
 
 std::optional<bool> HyprlandWindow::fullscreen()
 {
-    return m_window->isFullscreen();
+    return Fullscreen::controller()->isFullscreen(m_window);
 }
 
 }

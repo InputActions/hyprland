@@ -18,6 +18,7 @@
 
 #pragma once
 
+#include <hyprland/src/desktop/DesktopTypes.hpp>
 #include <libinputactions/interfaces/Window.h>
 
 namespace Desktop::View
@@ -31,7 +32,7 @@ namespace InputActions
 class HyprlandWindow : public Window
 {
 public:
-    HyprlandWindow(Desktop::View::CWindow *window);
+    HyprlandWindow(PHLWINDOW window);
 
     std::optional<QString> id() override;
     std::optional<pid_t> pid() override;
@@ -41,7 +42,7 @@ public:
     std::optional<bool> fullscreen() override;
 
 private:
-    Desktop::View::CWindow *m_window;
+    PHLWINDOW m_window;
 };
 
 }

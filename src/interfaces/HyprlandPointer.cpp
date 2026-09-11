@@ -18,9 +18,10 @@
 
 #include "HyprlandPointer.h"
 #include <hyprland/src/Compositor.hpp>
-#include <hyprland/src/helpers/Monitor.hpp>
-#include <hyprland/src/managers/PointerManager.hpp>
+#include <hyprland/src/desktop/state/FocusState.hpp>
+#include <hyprland/src/output/Monitor.hpp>
 #include <hyprland/src/plugins/HookSystem.hpp>
+#include <hyprland/src/pointer/PointerManager.hpp>
 #undef HANDLE
 #include <QRectF>
 #include <libinputactions/input/backends/InputBackend.h>
@@ -43,13 +44,13 @@ std::optional<CursorShape> HyprlandPointer::cursorShape()
 
 std::optional<QPointF> HyprlandPointer::globalPointerPosition()
 {
-    const auto position = g_pPointerManager->position();
+    const auto position = Pointer::mgr()->position();
     return QPointF(position.x, position.y);
 }
 
 std::optional<QPointF> HyprlandPointer::screenPointerPosition()
 {
-    const auto monitor = g_pCompositor->getMonitorFromCursor();
+    const auto monitor = Desktop::focusState()->monitor();
     const QRectF geometry(monitor->m_position.x, monitor->m_position.y, monitor->m_size.x, monitor->m_size.y);
     const auto translatedPosition = globalPointerPosition().value() - geometry.topLeft();
     return QPointF(translatedPosition.x() / geometry.width(), translatedPosition.y() / geometry.height());
@@ -58,7 +59,7 @@ std::optional<QPointF> HyprlandPointer::screenPointerPosition()
 void HyprlandPointer::setGlobalPointerPosition(const QPointF &value)
 {
     g_inputBackend->setIgnoreEvents(true);
-    g_pPointerManager->warpTo({value.x(), value.y()});
+    Pointer::mgr()->warpTo({value.x(), value.y()});
     g_inputBackend->setIgnoreEvents(false);
 }
 
