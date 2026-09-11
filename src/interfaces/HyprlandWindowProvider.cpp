@@ -21,8 +21,8 @@
 #include "input/HyprlandInputDevice.h"
 #include <hyprland/src/Compositor.hpp>
 #include <hyprland/src/desktop/state/FocusState.hpp>
-#include <hyprland/src/helpers/Monitor.hpp>
-#include <hyprland/src/managers/PointerManager.hpp>
+#include <hyprland/src/pointer/PointerManager.hpp>
+#include <hyprland/src/state/MonitorState.hpp>
 #undef HANDLE
 #include <libinputactions/input/backends/InputBackend.h>
 #include <libinputactions/input/devices/InputDevice.h>
@@ -33,7 +33,7 @@ namespace InputActions
 
 std::shared_ptr<Window> HyprlandWindowProvider::activeWindow()
 {
-    if (auto *window = Desktop::focusState()->window().get()) {
+    if (const auto window = Desktop::focusState()->window()) {
         return std::make_shared<HyprlandWindow>(window);
     }
     return {};
@@ -58,13 +58,13 @@ std::shared_ptr<Window> HyprlandWindowProvider::windowUnderFingers()
     }
     center /= validTouchPoints.size();
 
-    auto monitor = g_pCompositor->getMonitorFromName(!hyprlandDevice->m_boundOutput.empty() ? hyprlandDevice->m_boundOutput : "");
+    auto monitor = State::monitorState()->query().name(!hyprlandDevice->m_boundOutput.empty() ? hyprlandDevice->m_boundOutput : "").run();
     if (!monitor) {
         monitor = Desktop::focusState()->monitor();
     }
 
     const Vector2D position(monitor->m_position.x + center.x() * monitor->m_size.x, monitor->m_position.y + center.y() * monitor->m_size.y);
-    if (auto *window = g_pCompositor->vectorToWindowUnified(position, 0).get()) {
+    if (const auto window = Desktop::viewState()->hitTest().windowAt(position, 0)) {
         return std::make_shared<HyprlandWindow>(window);
     }
     return {};
@@ -72,7 +72,7 @@ std::shared_ptr<Window> HyprlandWindowProvider::windowUnderFingers()
 
 std::shared_ptr<Window> HyprlandWindowProvider::windowUnderPointer()
 {
-    if (auto *window = g_pCompositor->vectorToWindowUnified(g_pPointerManager->position(), 0).get()) {
+    if (const auto window = Desktop::viewState()->hitTest().windowAt(Pointer::mgr()->position(), 0)) {
         return std::make_shared<HyprlandWindow>(window);
     }
     return {};
@@ -80,9 +80,9 @@ std::shared_ptr<Window> HyprlandWindowProvider::windowUnderPointer()
 
 std::shared_ptr<Window> HyprlandWindowProvider::findWindowById(const QString &id)
 {
-    for (const auto &window : g_pCompositor->m_windows) {
+    for (const auto &window : Desktop::viewState()->windows()) {
         if (HyprlandWindow::idToString(window.get()) == id) {
-            return std::make_shared<HyprlandWindow>(window.get());
+            return std::make_shared<HyprlandWindow>(window);
         }
     }
     return {};
