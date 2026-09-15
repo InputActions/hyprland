@@ -21,7 +21,6 @@
 #include <hyprland/src/managers/KeybindManager.hpp>
 #include <hyprland/src/managers/input/InputManager.hpp>
 #undef HANDLE
-#include <libinputactions/input/backends/InputBackend.h>
 
 namespace InputActions
 {
@@ -38,15 +37,12 @@ HyprlandVirtualKeyboard::~HyprlandVirtualKeyboard()
     m_device->events.destroy.emit();
 }
 
-void HyprlandVirtualKeyboard::keyboardKey(KeyboardKey key, bool state)
+void HyprlandVirtualKeyboard::doKeyboardKey(KeyboardKey key, bool state)
 {
-    g_inputBackend->setIgnoreEvents(true);
-
     m_device->events.key.emit(Aquamarine::IKeyboard::SKeyEvent{
         .key = key.scanCode(),
         .pressed = state,
     });
-    VirtualKeyboard::keyboardKey(key, state);
 
     if (const auto modifier = g_pKeybindManager->keycodeToModifier(key.scanCode() + 8)) {
         if (state) {
@@ -58,8 +54,6 @@ void HyprlandVirtualKeyboard::keyboardKey(KeyboardKey key, bool state)
             .depressed = m_modifiers,
         });
     }
-
-    g_inputBackend->setIgnoreEvents(false);
 }
 
 const std::string &HyprlandVirtualKeyboard::Device::getName()

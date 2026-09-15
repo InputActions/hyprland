@@ -34,7 +34,8 @@ public:
 
     Aquamarine::IKeyboard *hyprlandDevice() { return m_device.get(); }
 
-    void keyboardKey(KeyboardKey key, bool state) override;
+protected:
+    void doKeyboardKey(KeyboardKey key, bool state) override;
 
 private:
     class Device : public Aquamarine::IKeyboard
